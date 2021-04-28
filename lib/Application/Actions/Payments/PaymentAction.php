@@ -9,11 +9,7 @@ use Psr\Log\LoggerInterface;
 
 abstract class PaymentAction extends Action {
 
-	protected PaymentRepository $payments;
-
-	public function __construct(LoggerInterface $logger, PaymentRepository $payments){
+	public function __construct(LoggerInterface $logger){
 		parent::__construct($logger);
-
-		$this->payments = $payments;
 	}
 }

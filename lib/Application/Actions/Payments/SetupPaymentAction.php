@@ -2,8 +2,10 @@
 
 namespace App\Application\Actions\Payments;
 
-use App\Domain\Payment\Payment;
+use App\Application\Settings\Env;
 use Psr\Http\Message\ResponseInterface as Response;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 class SetupPaymentAction extends PaymentAction {
 
@@ -15,10 +17,20 @@ class SetupPaymentAction extends PaymentAction {
 		$amount = $data->amount;
 		$description = $data->description;
 
-		$payment = Payment::create($amount, $description);
+		Stripe::setApiKey(Env::getStripeKey());
 
-		$this->payments->putPayment($payment);
+		$payment = [
+			'amount' => $amount,
+			'currency' => Env::getCurrency(),
+			'description' => $description,
+		];
+		$payment_intent = PaymentIntent::create($payment);
 
-		return $this->respondWithData($payment);
+		// replace this with just the Payment entity return
+		$output = array_merge($payment, [
+			'clientSecret' => $payment_intent->client_secret,
+		]);
+
+		return $this->respondWithData($output);
 	}
 }
