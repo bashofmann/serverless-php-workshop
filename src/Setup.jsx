@@ -33,8 +33,7 @@ export default function SetupForm({setId}){
 				return
 			}
 
-			setId(data.id)
-			window.history.replaceState({}, 'Make your payment', `?id=${data.id}`)
+			setId(data.clientSecret)
 		})
 			.catch(() => {
 				setProcessing(false)
@@ -73,7 +72,7 @@ export default function SetupForm({setId}){
 					      {processing ? (
 						      <div className="spinner" id="spinner"/>
 					      ) : (
-						      "Create payment"
+						      "Start payment"
 					      )}
 					    </span>
 				</button>

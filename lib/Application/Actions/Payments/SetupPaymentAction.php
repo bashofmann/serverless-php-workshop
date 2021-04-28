@@ -14,7 +14,7 @@ class SetupPaymentAction extends PaymentAction {
 		$data = $this->getFormData();
 
 		// Amount will be in decimal e.g. £5.54
-		$amount = $data->amount;
+		$amount = $data->amount * 100;
 		$description = $data->description;
 
 		Stripe::setApiKey(Env::getStripeKey());
@@ -27,9 +27,9 @@ class SetupPaymentAction extends PaymentAction {
 		$payment_intent = PaymentIntent::create($payment);
 
 		// replace this with just the Payment entity return
-		$output = array_merge($payment, [
+		$output = [
 			'clientSecret' => $payment_intent->client_secret,
-		]);
+		];
 
 		return $this->respondWithData($output);
 	}

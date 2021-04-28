@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, {useState} from "react";
 import {
 	CardElement,
 	useStripe,
@@ -10,32 +10,10 @@ export default function CheckoutForm({ id, setId }){
 	const [error, setError] = useState(null);
 	const [processing, setProcessing] = useState('');
 	const [disabled, setDisabled] = useState(true);
-	const [payment, setPayment] = useState(null);
 	const [name, setName] = useState(null);
 	const [email, setEmail] = useState(null);
 	const stripe = useStripe();
 	const elements = useElements();
-
-	useEffect(() => {
-		// Create PaymentIntent as soon as the page loads
-		fetch(`${process.env.REACT_APP_API_URL}/start?id=${id}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-		})
-			.then(res => {
-				console.log('Stripe create request', res)
-				return res.json();
-			})
-			.then(res => {
-				setPayment(res.data)
-			});
-	}, [id]);
-
-	if (!payment){
-		return <p>Setting up the payment&hellip;</p>
-	}
 
 	const cardStyle = {
 		style: {
@@ -65,9 +43,8 @@ export default function CheckoutForm({ id, setId }){
 	const handleSubmit = async ev => {
 		ev.preventDefault();
 		setProcessing(true);
-		const { clientSecret } = payment
 
-		const payload = await stripe.confirmCardPayment(clientSecret, {
+		const payload = await stripe.confirmCardPayment(id, {
 			payment_method: {
 				card: elements.getElement(CardElement),
 				billing_details: {
@@ -106,10 +83,9 @@ export default function CheckoutForm({ id, setId }){
 		<div className="container-shadow">
 			<h2 className="form-title">{succeeded ? 'Thanks for your custom' : 'Complete the payment'}</h2>
 			{succeeded ? <p className="mt-2 p-2 bg-green-600 text-white text-center">
-					{`Your payment of ${payment.amount} (${payment.currency}) for: ${payment.description} is complete`}
+					{`Your payment is complete`}
 				</p> :
 				<>
-					<p className="mb-2">{`Ready to make a payment of ${payment.amount} (${payment.currency}) for: ${payment.description}`}</p>
 					<form id="payment-form" onSubmit={handleSubmit}>
 						<div>
 							<label htmlFor="name">Name</label>
@@ -142,7 +118,9 @@ export default function CheckoutForm({ id, setId }){
 						)}
 					</form>
 				</>}
-			<p className="mt-2"><a href="#" onClick={reset} className="text-blue-500 hover:text-blue-700 font-bold">Set up a new payment</a></p>
+			<p className="mt-2">
+				<a href="#" onClick={reset} className="text-blue-500 hover:text-blue-700 font-bold">Set up a new payment</a>
+			</p>
 		</div>
 	);
 }
