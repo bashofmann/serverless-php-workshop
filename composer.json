@@ -1,6 +1,6 @@
 {
-  "name": "m1ke/serverless-payments",
-  "description": "A Slim Framework skeleton application for rapid development",
+  "name": "m1ke/serverless-workshop-3",
+  "description": "Third step of the serverless workshop, ready to implement webhooks",
   "require": {
     "php": "^7.4",
     "ext-json": "*",
