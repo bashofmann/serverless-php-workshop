@@ -1,4 +1,4 @@
-service: serverless-payments
+service: serverless-workshop-2
 
 useDotenv: true
 

@@ -17,24 +17,4 @@ class DynamoPaymentRepository implements PaymentRepository {
 		$this->client = $client;
 	}
 
-	public function findPayment(string $id): Payment{
-		$params = DynamoUtils::findParams(Payment::class, $id);
-
-		$result = $this->client->query($params);
-		$items = $result->get('Items');
-
-		if (count($items)===0){
-			throw new PaymentNotFoundException("The payment with ID $id could not be found");
-		}
-
-		$item = reset($items);
-
-		return Payment::hydrate($item);
-	}
-
-	public function putPayment(Payment $payment): void{
-		$item_params = DynamoUtils::insertParams($payment);
-
-		$this->client->putItem($item_params);
-	}
 }

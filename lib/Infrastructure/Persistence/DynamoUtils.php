@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence;
 
 use Aws\DynamoDb\Marshaler;
 use ReflectionClass;
+use ReflectionException;
 
 class DynamoUtils {
 
@@ -78,11 +79,12 @@ class DynamoUtils {
 		try {
 			$class = new ReflectionClass($entity);
 		}
-		catch (\ReflectionException $e) {
+		catch (ReflectionException $e) {
 			return [];
 		}
 		$properties = $class->getProperties();
 
+		$arr = [];
 		foreach ($properties as $param){
 			$name = $param->name;
 			$type = $param->getType();
