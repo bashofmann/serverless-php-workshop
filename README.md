@@ -261,3 +261,21 @@ echo "Distribution ID: $DISTRIBUTION_ID"
 
 aws cloudfront create-invalidation --distribution-id "$DISTRIBUTION_ID" --paths "/index.html" --output text
 ```
+
+To get the Distribution ID here we need our serverless deploys to output
+some data in a way that other applications can easily read. Append this
+after the `vendor/bref/bref` line in `serverless.yml`:
+
+```
+  - serverless-export-outputs
+
+custom:
+  exportOutputs:
+    include:
+      - DistributionId
+    output:
+      file: ./serverless-output.json # file path and name relative to root
+      format: json # toml, yaml/yml, json
+```
+
+(NB whitespace matters given this is a yml file)
