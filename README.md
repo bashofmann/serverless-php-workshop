@@ -93,7 +93,7 @@ Once these items have been added to `serverless.yml` we can try posting
 some data to our queue:
 
 ```
-curl -X POST -d '{"test": 1}' {output-url}
+curl -X POST -d '{"test": 1}' <output-url>
 ```
 
 Now in the AWS console we can see our queue, and "poll" it for messages.
@@ -114,7 +114,98 @@ too many at any one time waiting to be processed.
 Firstly we want to look at `webhook.php`, the example function created
 to process our event Lambda.
 
+This file has been created to do the basic work of bootstrapping our Slim
+framework application. However unlike our `index.php` file which executes
+Slim just like any other web-hosted setup would, this function is
+executed as a Lambda event. What this means is that when Bref runs this
+function in response to an event sent to Lambda, it executes our
+bootstrap and expects to receive a callable returned from the script.
 
+[need to confirm this with Matthieu] It's worth noting that depending on the rate of items entering the
+queue, a single returned function may be executed more than once. This
+means we need to be careful to keep the function stateless - if the
+function modifies the logger, or the container, for example, subsequent
+executions of other queue items would have these modifications present.
+This is especially worth bearing in mind for ORMs which may cache data
+to avoid database calls - e.g. Doctrine will keep copies of an object
+in a repository.
+
+The current behaviour is very basic - we log to CloudWatch and we exit.
+We can add to our `serverles.yml` file to create the function:
+
+```
+  webhook:
+    handler: webhook.php
+    layers:
+      - ${bref:layer.php-74}
+    events:
+      - sqs:
+          # We only want to process 1 at a time
+          # so if it fails we can retry
+          batchSize: 1
+          arn:
+            Fn::GetAtt:
+              - WebhookQueue
+              - Arn
+```
+
+If we deploy this function and post to the queue we should see the item
+processed in CloudWatch logs:
+
+```
+curl -X POST -d '{"test": 1}' <output-url>
+```
+
+One advantage of processing webhooks this way, rather than via another
+web endpoint, is that we can handle processing failures natively within
+the infrastructure, rather than having to manage them in our application.
+
+Most services that send webhooks will do something simple like retry
+(possibly with exponential back-off) for webhooks that receive a 4xx
+or 5xx HTTP status code. But most won't do anything beyond this, and many
+will eventually give up. Unlike more intelligent API consumers (e.g. a
+front end application, or a custom 3rd party implementation) sending an
+error message will be fairly pointless - most likely we, as developers
+of the webhook receiver, will need to handle this.
+
+For this reason, in our YML block above we created a "dead letter queue"
+which handles "failed" queue processing. The way this works is that if
+the function throws an exception (i.e. some internal code throws and we
+do not catch it) Lambda will return our SQS message to the queue. Each
+time an SQS message is returned to the queue SQS will check the "redrive
+policy". In our case we've said that if the message is received by a
+consumer 5 times, the next time it returns to the queue it will drop into
+the "dead-letter queue".
+
+We can simulate this by adding the following:
+
+```
+throw new \Exception('This always throws, oops');
+```
+
+Now post to the queue, and we will see 5 invocations, followed by a
+message becoming visible in our dead-letter queue.
+
+At present handling of dead-letter queues needs to be manual - this is
+because presumably the repeated failure means something is wrong with our
+code, rather than just a tempoary service outage. So likely it needs a
+developer to intervene.
+
+The Bref team are working at present on a dashboard to monitor Bref
+functions - one feature they plan to add, which is not native to the AWS
+console, is the ability to easily pivot from viewing a dead-letter queue
+message, to see the logs for that message's original invocation, and a
+one-click option to retry (presumably once we've determined that it will
+not fail again, should we do so).
+
+## Working code
+
+Now that we've tested this, we can apply the actual useful code for our
+application to the webhook (overwriting the current function content).
+This lets us count the number of payments received against our
+particular payment request. We could also use this to add users to a
+list for dispatch or tickets if we were running an event - or use a tool
+like AWS Simple Email Service to send a confirmation email.
 
 ```
 $record = reset($event['Records']);
@@ -147,18 +238,8 @@ $logger->notice("Updated payment", [
 ]);
 ```
 
-```
-  webhook:
-    handler: webhook.php
-    layers:
-      - ${bref:layer.php-74}
-    events:
-      - sqs:
-          # We only want to process 1 at a time
-          # so if it fails we can retry
-          batchSize: 1
-          arn:
-            Fn::GetAtt:
-              - WebhookQueue
-              - Arn
-```
+If we now deploy and make a payment we should be able to go into the
+DynamoDB console and see the count has ticked up - and if somehow we miss
+the webhook from Stripe, it'll get retried up to 5 times before
+we see it in our dead-letter queue to allow us to debug our application,
+and not lose out on any important data for our business.

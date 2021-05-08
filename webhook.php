@@ -46,5 +46,8 @@ $container = $containerBuilder->build();
 $logger = _getLogger();
 
 return static function ($event, Context $context) use ($container, $logger){
-
+	$logger->debug('Received webhook from queue', [
+		'_webhook' => $event,
+		'_lambda' => $context->jsonSerialize(),
+	]);
 };
