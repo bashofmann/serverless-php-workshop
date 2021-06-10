@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence;
 
-use JsonSerializable;
-
 interface DynamoInterface  {
 	public static function tableName(): string;
 
