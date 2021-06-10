@@ -29,11 +29,8 @@ functions:
 # Exclude files from deployment
 package:
   patterns:
-    - '!node_modules/**'
-    - '!public/**'
-    - '!tests/**'
-    - '!.idea/**'
-    - '!bin/**'
-    - '!docker/**'
-    - '!src/**'
-    - '!build/**'
+    - '!./**'
+    - 'app/**'
+    - 'lib/**'
+    - 'vendor/**'
+    - 'index.php'
