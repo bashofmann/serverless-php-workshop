@@ -23,3 +23,7 @@ services:
       - .env.development.local
     expose:
       - 9003
+  test:
+    image: webdevops/php-dev:7.4
+    volumes:
+      - .:/app
