@@ -37,6 +37,7 @@
   },
   "scripts": {
     "start": "php -S localhost:8080 -dzend_extension=xdebug -c php.ini",
-    "test": "phpunit"
+    "test": "phpunit",
+    "check": "psalm"
   }
 }
