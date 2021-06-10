@@ -1,6 +1,6 @@
 {
-  "name": "m1ke/serverless-workshop-3",
-  "description": "Third step of the serverless workshop, ready to implement webhooks",
+  "name": "m1ke/serverless-workshop-2",
+  "description": "Second step of the serverless workshop, adding DynamoDB",
   "require": {
     "php": "^7.4",
     "ext-json": "*",
@@ -37,6 +37,7 @@
   },
   "scripts": {
     "start": "php -S localhost:8080 -dzend_extension=xdebug -c php.ini",
-    "test": "phpunit"
+    "test": "phpunit",
+    "check": "psalm"
   }
 }

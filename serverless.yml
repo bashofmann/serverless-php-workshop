@@ -40,20 +40,17 @@ functions:
 # Exclude files from deployment
 package:
   patterns:
-    - '!node_modules/**'
-    - '!public/**'
-    - '!tests/**'
-    - '!.idea/**'
-    - '!bin/**'
-    - '!docker/**'
-    - '!src/**'
-    - '!build/**'
+    - '!./**'
+    - 'app/**'
+    - 'lib/**'
+    - 'vendor/**'
+    - 'index.php'
 
 resources:
   Outputs:
-    WebhookURI:
-      Description: The URI that webhooks should be sent to
-      Value: !GetAtt WebhookHttpApi.ApiEndpoint
+    CloudfrontURL:
+      Description: The URL our application runs at
+      Value: !GetAtt WebsiteCDN.DomainName
     DistributionId:
       Description: The ID to create invalidations at
       Value: !Ref WebsiteCDN

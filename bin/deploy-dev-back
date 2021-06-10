@@ -1,3 +1,9 @@
 #!/bin/bash
 
+set -e
+
+docker-compose run composer composer install --no-dev -o
+
 sls deploy --stage=development
+
+docker-compose run composer composer install
