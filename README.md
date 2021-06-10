@@ -145,6 +145,9 @@ use this to route API requests to API Gateway.
 ```
 resources:
   Outputs:
+    CloudfrontURL:
+      Description: The URL our application runs at
+      Value: !GetAtt WebsiteCDN.DomainName
     DistributionId:
       Description: The ID to create invalidations at
       Value: !Ref WebsiteCDN
