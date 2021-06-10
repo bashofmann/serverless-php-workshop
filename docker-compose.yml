@@ -1,6 +1,10 @@
 version: "3.5"
 
 services:
+  composer:
+    image: composer
+    volumes:
+      - .:/app
   web:
     image: bref/fpm-dev-gateway
     ports:

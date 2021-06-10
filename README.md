@@ -25,8 +25,11 @@ Before running we need to configure a local environment by copying
 development there shouldn't be anything that needs changing, but 
 you can add your own Stripe test keys if you have an account.
 
+(NB: I'll be using `nvm` to manage node versions, so typing `nvm use`
+before any node commands will be necessary for each new terminal)
+
 ```
-composer install
+docker-compose run composer composer install
 npm i
 docker-compose up -d
 npm run start
