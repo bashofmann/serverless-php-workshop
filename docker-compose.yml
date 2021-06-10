@@ -13,6 +13,7 @@ services:
       - .:/var/task
     depends_on:
       - php
+      - dynamo
     environment:
       HANDLER: index.php
   php:
