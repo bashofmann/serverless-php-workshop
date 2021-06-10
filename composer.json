@@ -1,6 +1,6 @@
 {
-  "name": "m1ke/serverless-workshop-3",
-  "description": "Third step of the serverless workshop, ready to implement webhooks",
+  "name": "m1ke/serverless-workshop-1",
+  "description": "First step of the serverless workshop",
   "require": {
     "php": "^7.4",
     "ext-json": "*",
