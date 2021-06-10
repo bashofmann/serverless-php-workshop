@@ -31,7 +31,7 @@ before any node commands will be necessary for each new terminal)
 ```
 docker-compose run composer composer install
 npm i
-docker-compose up -d
+docker-compose up -d web
 npm run start
 ```
 
