@@ -196,7 +196,7 @@ like AWS Simple Email Service to send a confirmation email.
 
 ```
 $record = reset($event['Records']);
-$data = json_decode($record['body'], true, JSON_THROW_ON_ERROR);
+$data = json_decode($record['body'], true, 512, JSON_THROW_ON_ERROR);
 
 $logger->debug('Received webhook from queue', [
   '_webhook' => $data,
