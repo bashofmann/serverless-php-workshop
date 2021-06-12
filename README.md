@@ -20,12 +20,11 @@ endpoint will be placed on the queue.
     WebhookQueue:
       Type: AWS::SQS::Queue
       Properties:
-        VisibilityTimeout: 600
+        VisibilityTimeout: 20
         MessageRetentionPeriod: 604800
-        ReceiveMessageWaitTimeSeconds: 20
         RedrivePolicy:
           deadLetterTargetArn: !GetAtt [ WebhookDeadLetterQueue, Arn ]
-          maxReceiveCount: 5
+          maxReceiveCount: 1
     WebhookDeadLetterQueue:
       Type: AWS::SQS::Queue
       Properties:
@@ -93,7 +92,7 @@ Once these items have been added to `serverless.yml` we can try posting
 some data to our queue:
 
 ```
-curl -X POST -d '{"test": 1}' <output-url>
+curl -X POST -d '{"test": 1}' <output-url>/development
 ```
 
 Now in the AWS console we can see our queue, and "poll" it for messages.
@@ -121,15 +120,6 @@ executed as a Lambda event. What this means is that when Bref runs this
 function in response to an event sent to Lambda, it executes our
 bootstrap and expects to receive a callable returned from the script.
 
-[need to confirm this with Matthieu] It's worth noting that depending on the rate of items entering the
-queue, a single returned function may be executed more than once. This
-means we need to be careful to keep the function stateless - if the
-function modifies the logger, or the container, for example, subsequent
-executions of other queue items would have these modifications present.
-This is especially worth bearing in mind for ORMs which may cache data
-to avoid database calls - e.g. Doctrine will keep copies of an object
-in a repository.
-
 The current behaviour is very basic - we log to CloudWatch and we exit.
 We can add to our `serverles.yml` file to create the function:
 
@@ -143,10 +133,7 @@ We can add to our `serverles.yml` file to create the function:
           # We only want to process 1 at a time
           # so if it fails we can retry
           batchSize: 1
-          arn:
-            Fn::GetAtt:
-              - WebhookQueue
-              - Arn
+          arn: !GetAtt WebhookQueue.Arn
 ```
 
 If we deploy this function and post to the queue we should see the item
@@ -174,7 +161,7 @@ the function throws an exception (i.e. some internal code throws and we
 do not catch it) Lambda will return our SQS message to the queue. Each
 time an SQS message is returned to the queue SQS will check the "redrive
 policy". In our case we've said that if the message is received by a
-consumer 5 times, the next time it returns to the queue it will drop into
+consumer once, the next time it returns to the queue it will drop into
 the "dead-letter queue".
 
 We can simulate this by adding the following:
