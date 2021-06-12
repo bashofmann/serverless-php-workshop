@@ -227,6 +227,6 @@ $logger->notice("Updated payment", [
 
 If we now deploy and make a payment we should be able to go into the
 DynamoDB console and see the count has ticked up - and if somehow we miss
-the webhook from Stripe, it'll get retried up to 5 times before
-we see it in our dead-letter queue to allow us to debug our application,
+the webhook from Stripe,
+we will see it in our dead-letter queue to allow us to debug our application,
 and not lose out on any important data for our business.
