@@ -121,7 +121,8 @@ endpoints:
   ANY - https://{some random string}.execute-api.eu-west-1.amazonaws.com
 ```
 
-Hold off doing anything with that endpoint just yet.
+We can make a quick `curl` request (remembering to add our path `/api/`)
+to check it works.
 
 ## Deploying a front-end to S3 and Cloudfront
 
