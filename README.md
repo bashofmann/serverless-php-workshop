@@ -37,7 +37,7 @@ npm run start
 
 At this point the website should be accessible at
 `http://localhost:3000/`. To test the API we can run 
-`curl -I http://localhost:8080` to which we should see a 204
+`curl -I http://localhost:8080/api/` to which we should see a 204
 no content response.
 
 On the website itself we should be able to make a payment by
@@ -121,7 +121,7 @@ endpoints:
   ANY - https://{some random string}.execute-api.eu-west-1.amazonaws.com
 ```
 
-Hold off doin anything with that endpoint just yet.
+Hold off doing anything with that endpoint just yet.
 
 ## Deploying a front-end to S3 and Cloudfront
 
