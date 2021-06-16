@@ -1,6 +1,18 @@
 #!/bin/bash
 
 source .env.development
+if [ -z "$REACT_APP_API_URL" ]; then
+  echo "Must set REACT_APP_API_URL"
+  exit 1
+fi
+if [[ $REACT_APP_API_URL == *"localhost"* ]]; then
+  echo "The env var REACT_APP_API_URL should not contain 'localhost'"
+  exit 1
+fi
+if [ -z "$BUCKET_FRONT_END" ]; then
+  echo "Must set BUCKET_FRONT_END"
+  exit 1
+fi
 echo "React API endpoint: $REACT_APP_API_URL"
 echo "S3 target: $BUCKET_FRONT_END"
 echo "Currency: $REACT_APP_CURRENCY"
