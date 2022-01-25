@@ -1,4 +1,4 @@
-# DPC Serverless Workshop
+# Serverless Workshop
 
 The final step of our application is to handle asynchronous events, in this case using SQS, Amazon's queue service. We'll hook this up to be processed by our application using Lambda
 
