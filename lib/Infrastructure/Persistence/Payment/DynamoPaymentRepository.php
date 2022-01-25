@@ -23,7 +23,7 @@ class DynamoPaymentRepository implements PaymentRepository {
 		$result = $this->client->query($params);
 		$items = $result->get('Items');
 
-		if (count($items)===0){
+		if (!$items || count($items)===0){
 			throw new PaymentNotFoundException("The payment with ID $id could not be found");
 		}
 

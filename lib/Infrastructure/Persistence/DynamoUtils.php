@@ -5,6 +5,7 @@ namespace App\Infrastructure\Persistence;
 
 use Aws\DynamoDb\Marshaler;
 use ReflectionClass;
+use ReflectionNamedType;
 
 class DynamoUtils {
 
@@ -83,11 +84,12 @@ class DynamoUtils {
 		}
 		$properties = $class->getProperties();
 
+		$arr = [];
 		foreach ($properties as $param){
 			$name = $param->name;
 			$type = $param->getType();
 			$val = reset($item[$name]);
-			if ($type!==null){
+			if ($type instanceof ReflectionNamedType){
 				$type_name = $type->getName();
 				settype($val, $type_name);
 			}

@@ -10,5 +10,5 @@ interface PaymentRepository {
 	 */
 	public function findPayment(string $id): Payment;
 
-	public function putPayment(Payment $payment);
+	public function putPayment(Payment $payment) :void;
 }
