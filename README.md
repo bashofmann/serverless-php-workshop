@@ -65,6 +65,8 @@ https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Nami
 
 ## Implement the repository with DynamoDB
 
+NB: first you'll need to update our composer dependencies: `docker-compose run composer install`
+
 Implement the required functions into `DynamoPaymentRepository.php`
 
 ```

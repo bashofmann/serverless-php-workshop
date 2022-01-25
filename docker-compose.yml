@@ -2,7 +2,7 @@ version: "3.5"
 
 services:
   composer:
-    image: composer
+    image: prooph/composer:7.4
     volumes:
       - .:/app
   web:
