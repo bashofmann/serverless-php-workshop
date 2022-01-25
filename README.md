@@ -1,4 +1,4 @@
-# DPC Serverless Workshop
+# Serverless Workshop
 
 ## Testing the application locally
 
