@@ -119,7 +119,7 @@ export default function CheckoutForm({ id, setId }){
 					</form>
 				</>}
 			<p className="mt-2">
-				<a href="#" onClick={reset} className="text-blue-500 hover:text-blue-700 font-bold">Set up a new payment</a>
+				<button onClick={reset} className="text-blue-500 hover:text-blue-700 font-bold bg-white shadow-none">Set up a new payment</button>
 			</p>
 		</div>
 	);
