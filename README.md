@@ -1,4 +1,4 @@
-# DPC Serverless Workshop
+# Serverless Workshop
 
 In the second part of the workshop we'll add a repository that uses Amazon DynamoDB to store data about our payments
 
