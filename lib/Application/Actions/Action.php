@@ -51,10 +51,10 @@ abstract class Action {
 	abstract protected function action(): ResponseInterface;
 
 	/**
-	 * @return array|object
+	 * @return null|object
 	 * @throws HttpBadRequestException
 	 */
-	protected function getFormData(){
+	protected function getFormData(): ?object{
 		try {
 			$input = json_decode(file_get_contents('php://input'), false, 512, JSON_THROW_ON_ERROR);
 		}
@@ -62,7 +62,7 @@ abstract class Action {
 			throw new HttpBadRequestException($this->request, 'Malformed JSON input.');
 		}
 
-		return $input;
+		return is_object($input) ? $input : null;
 	}
 
 	/**
