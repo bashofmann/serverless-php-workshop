@@ -11,6 +11,10 @@ class SetupPaymentAction extends PaymentAction {
 		// retrieve JSON from POST body
 		$data = $this->getFormData();
 
+		if (!$data){
+			return $this->respondWithError('Please submit a JSON-encoded request body');
+		}
+
 		// Amount will be in decimal e.g. £5.54
 		$amount = $data->amount;
 		$description = $data->description;

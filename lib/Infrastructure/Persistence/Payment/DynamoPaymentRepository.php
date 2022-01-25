@@ -16,5 +16,4 @@ class DynamoPaymentRepository implements PaymentRepository {
 	public function __construct(DynamoDbClient $client){
 		$this->client = $client;
 	}
-
 }

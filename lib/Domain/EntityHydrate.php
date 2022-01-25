@@ -1,9 +1,9 @@
 <?php
 
-
 namespace App\Domain;
 
 use ReflectionClass;
+use ReflectionNamedType;
 
 trait EntityHydrate {
 	public static function hydrate(array $item): self{
@@ -23,7 +23,7 @@ trait EntityHydrate {
 				continue;
 			}
 			$type = $param->getType();
-			if ($type!==null){
+			if ($type instanceof ReflectionNamedType){
 				$type_name = $type->getName();
 				settype($val, $type_name);
 			}

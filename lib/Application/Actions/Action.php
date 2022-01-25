@@ -51,7 +51,7 @@ abstract class Action {
 	abstract protected function action(): ResponseInterface;
 
 	/**
-	 * @return array|object
+	 * @return null|object
 	 * @throws HttpBadRequestException
 	 */
 	protected function getFormData(){
@@ -62,7 +62,7 @@ abstract class Action {
 			throw new HttpBadRequestException($this->request, 'Malformed JSON input.');
 		}
 
-		return $input;
+		return is_object($input) ? $input : null;
 	}
 
 	/**
