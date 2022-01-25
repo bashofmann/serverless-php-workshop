@@ -7,7 +7,7 @@
   are not part of this workshop.
 * The front-end is a simple React application set up using "create React
   app" and Tailwind. When the app loads in a browser it provides an
-  interface to add a charge value and desccription; on submission it
+  interface to add a charge value and description; on submission it
   communicates with an API to create a "payment intent" using Stripe
 * The back end is written in the Slim framework and provides one simple
   route to create the payment intent using our private key with Stripe
