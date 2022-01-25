@@ -29,7 +29,7 @@ you can add your own Stripe test keys if you have an account.
 before any node commands will be necessary for each new terminal)
 
 ```
-docker-compose run composer composer install
+docker-compose run composer install
 npm i
 docker-compose up -d web
 npm run start
