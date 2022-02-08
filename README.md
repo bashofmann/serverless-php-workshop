@@ -175,7 +175,7 @@ message becoming visible in our dead-letter queue.
 
 At present handling of dead-letter queues needs to be manual - this is
 because presumably the repeated failure means something is wrong with our
-code, rather than just a tempoary service outage. So likely it needs a
+code, rather than just a temporary service outage. So likely it needs a
 developer to intervene.
 
 The Bref team are working at present on a dashboard to monitor Bref
