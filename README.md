@@ -10,6 +10,14 @@ However to do this, the data sent to the queue must meet the
 required format of the queue, so collecting simply any HTTP request
 with a JSON body isn't possible.
 
+Most services that send webhooks will do something simple like retry
+(possibly with exponential back-off) for webhooks that receive a 4xx
+or 5xx HTTP status code. But most won't do anything beyond this, and many
+will eventually give up. Unlike more intelligent API consumers (e.g. a
+front end application, or a custom 3rd party implementation) sending an
+error message will be fairly pointless - most likely we, as developers
+of the webhook receiver, will need to handle this.
+
 With a considerable amount of YAML we can create a service that exposes
 an API gateway endpoint that provides a simple proxy, speaking the
 required language of the queue so that any JSON request sent to the
@@ -147,14 +155,6 @@ One advantage of processing webhooks this way, rather than via another
 web endpoint, is that we can handle processing failures natively within
 the infrastructure, rather than having to manage them in our application.
 
-Most services that send webhooks will do something simple like retry
-(possibly with exponential back-off) for webhooks that receive a 4xx
-or 5xx HTTP status code. But most won't do anything beyond this, and many
-will eventually give up. Unlike more intelligent API consumers (e.g. a
-front end application, or a custom 3rd party implementation) sending an
-error message will be fairly pointless - most likely we, as developers
-of the webhook receiver, will need to handle this.
-
 For this reason, in our YML block above we created a "dead letter queue"
 which handles "failed" queue processing. The way this works is that if
 the function throws an exception (i.e. some internal code throws and we
@@ -170,7 +170,7 @@ We can simulate this by adding the following:
 throw new \Exception('This always throws, oops');
 ```
 
-Now post to the queue, and we will see 5 invocations, followed by a
+Now post to the queue, and we will see 1 invocation, followed by a
 message becoming visible in our dead-letter queue.
 
 At present handling of dead-letter queues needs to be manual - this is
