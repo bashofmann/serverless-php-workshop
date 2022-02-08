@@ -178,12 +178,10 @@ because presumably the repeated failure means something is wrong with our
 code, rather than just a temporary service outage. So likely it needs a
 developer to intervene.
 
-The Bref team are working at present on a dashboard to monitor Bref
-functions - one feature they plan to add, which is not native to the AWS
-console, is the ability to easily pivot from viewing a dead-letter queue
-message, to see the logs for that message's original invocation, and a
-one-click option to retry (presumably once we've determined that it will
-not fail again, should we do so).
+The AWS console recently added a feature to retry failed queue invocations
+from the console, although this is not yet available via the API. Both the Bref
+team, and the Serverless framework team also provide tooling for better
+retry and handling of failed queue items.
 
 ## Working code
 
